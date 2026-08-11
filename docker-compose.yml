@@ -1,15 +1,15 @@
 services:
-
-
-  nginx:
-    image: nginx:alpine
-    container_name: proxy-nginx
+  nginx-proxy-manager:
+    image: 'jc21/nginx-proxy-manager:latest'
+    container_name: proxy-manager
+    restart: always
     ports:
-      - "80:80"
+      - "80:80" #Http
+      - "81:81" #Administración de la API
+      - "443:443" #Https
     volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-    depends_on:
-      - backend
+      - ./npm_data:/data
+      - ./npm_letsencrypt:/etc/letsencrypt
     networks:
       - red-ejemplo
 
@@ -24,12 +24,25 @@ services:
       - mysql-data:/var/lib/mysql
     networks:
       - red-ejemplo
+    health-check:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   backend:
     build: .
     container_name: backend-082
     depends_on:
       - db
+        
+    condition: healthy
+    health-check:
+      test: ["CMD-SHELL", "curl", "-f", "http://localhost:5050/ || localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
     networks:
       - red-ejemplo
 
