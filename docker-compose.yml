@@ -4,9 +4,9 @@ services:
     container_name: proxy-manager
     restart: always
     ports:
-      - "80:80" #Http
-      - "81:81" #Administración de la API
-      - "443:443" #Https
+      - "80:80"
+      - "81:81"
+      - "443:443"
     volumes:
       - ./npm_data:/data
       - ./npm_letsencrypt:/etc/letsencrypt
@@ -19,12 +19,11 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
-
     volumes:
       - mysql-data:/var/lib/mysql
     networks:
       - red-ejemplo
-    health-check:
+    healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       timeout: 5s
@@ -34,15 +33,13 @@ services:
     build: .
     container_name: backend-082
     depends_on:
-      - db
-        
-    condition: healthy
-    health-check:
-      test: ["CMD-SHELL", "curl", "-f", "http://localhost:5050/ || localhost"]
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5050/ || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 3
-
     networks:
       - red-ejemplo
 
