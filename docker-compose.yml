@@ -40,6 +40,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
+    networks:
+      - red-ejemplo
 
   uptime-kuma:
     image: louislam/uptime-kuma:1
@@ -48,13 +50,9 @@ services:
     ports:
       - "3001:3001"
     volumes:
-      - .uptime-kuma-data:/app/data
+      - ./uptime-kuma-data:/app/data
     networks:
       - red-ejemplo
-
-
-  networks:
-    - red-ejemplo
 
 volumes:
   mysql-data:
