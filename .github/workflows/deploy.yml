@@ -6,7 +6,29 @@ on:
 
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      -name: Descargar codigo
+        uses: actions/checkout@v4
+      -name: configurar python
+        uses: actions/setup-python@v
+        with:
+          python-version: 3.14.7
+        
+        -name: instalar dependencias
+        run: |
+          python - pip install --upgrate pip
+          pip install -r requirements.txt
+          pip install pytest
+      -name: ejecutar pruebas
+        run: pytest
+
+
+
+
   build-and-deploy:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Descargar codigo
