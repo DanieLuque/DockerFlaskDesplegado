@@ -32,5 +32,5 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script:
             cd ~/DockerFlaskDesplegado
-            docker compose pull app-db
+            docker compose pull db
             docker compose up -d 
