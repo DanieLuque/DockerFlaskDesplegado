@@ -30,12 +30,10 @@ services:
       retries: 3
 
   backend:
-    build: danieluque/mi-api:latest                
+    image: danieluque/mi-api:latest                
     container_name: backend-082
     ports:
       - "5050:5050"         
-    volumes:
-      - .:/home/myapp     
     depends_on:
       db:
         condition: service_healthy
