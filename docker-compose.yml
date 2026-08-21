@@ -30,8 +30,12 @@ services:
       retries: 3
 
   backend:
-    image: 'danieluque/mi-api:latest'
+    build: .                 # <- CAMBIO 1: Usa tu Dockerfile local en vez de descargar de Docker Hub
     container_name: backend-082
+    ports:
+      - "5050:5050"          # <- CAMBIO 2: Publica el puerto para poder abrirlo en tu navegador
+    volumes:
+      - .:/home/myapp        # <- CAMBIO 3: Conecta tu carpeta local con el contenedor en tiempo real
     depends_on:
       db:
         condition: service_healthy
