@@ -30,7 +30,7 @@ services:
       retries: 3
 
   backend:
-    build: .
+    image: 'danieluque/mi-api:latest'
     container_name: backend-082
     depends_on:
       db:
