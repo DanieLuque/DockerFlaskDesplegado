@@ -4,9 +4,8 @@ on:
   push:
     branches: ["main"]
 
-
 jobs:
-  build-and-push:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Descargar codigo
@@ -25,3 +24,13 @@ jobs:
           context: .
           push: true
           tags: danieluque/mi-api:latest
+      - name: deplegar en el sercidor cloud
+        uses: appleboy/ssh-action@1.0.3
+        with:
+          host: ${{ secrets.SERVER_Host }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script:
+            cd ~/DockerFlaskDesplegado
+            docker compose pull app-db
+            docker compose up -d 
