@@ -12,7 +12,7 @@ def home():
 		conn = pymysql.connect(host='servidor-bd-082'
 		, user='root',password='sena123', database='082_db')
 		conn.close()
-		db_status = "Conexión exitosa a la base de datos, prueba para despliegue continuo00"
+		db_status = "Conexión exitosa a la base de datos, prueba para despliegue continuo00XDDD"
 	except Exception as e:
 		db_status = f"Error al conectar a la base de datos: {e}"
 
