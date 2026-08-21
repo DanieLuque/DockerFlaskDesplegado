@@ -34,4 +34,4 @@ jobs:
           script: |
             cd ~/DockerFlaskDesplegado
             docker compose pull backend
-            docker compose up -d 
+            docker compose up -d --force-recreate
