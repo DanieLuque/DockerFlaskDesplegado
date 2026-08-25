@@ -16,7 +16,7 @@ jobs:
       - name: configurar python
         uses: actions/setup-python@v5
         with:
-          python-version: 3.14.7
+          python-version: '3.12'
 
       - name: instalar dependencias
         run: |
@@ -25,7 +25,7 @@ jobs:
           pip install pytest bandit
 
       - name: Escaneo de seguridad (bandit)
-        run: bandit -r . -s B101 #ignorar los archivos test
+        run: bandit -r . -s B101 -x ./tempdir
 
       - name: ejecutar pruebas
         run: pytest
@@ -64,10 +64,10 @@ jobs:
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH' #son los que van a detener la ejecucion
 
-      -name: subir la imagen a docker hub
-        usues: docker push danieluque/mi-api:latest
+      - name: subir la imagen a docker hub
+        run: docker push danieluque/mi-api:latest
 
-      - name: deplegar en el sercidor cloud
+      - name: desplegar en el servidor cloud
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
