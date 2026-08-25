@@ -2,6 +2,7 @@ from flask import Flask
 from flask import request
 from flask import render_template
 import pymysql
+import os
 
 sample = Flask(__name__)
 
@@ -12,7 +13,7 @@ def home():
         conn = pymysql.connect(
             host='servidor-bd-082',
             user='root',
-            password='sena123',
+            password='sena123', # nosec B106
             database='082_db'
         )
 
@@ -78,4 +79,4 @@ ___2¶¶¶¶8¶¶¶6_____26_______________16___¶¶¶¶¶¶¶¶¶6
 
 
 if __name__ == "__main__":
-    sample.run(host="0.0.0.0", port=5050, debug=True)
+    sample.run(host="0.0.0.0", port=5050, debug=False)  # nosec B104

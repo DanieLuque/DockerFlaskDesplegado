@@ -22,7 +22,10 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pytest
+          pip install pytest bandit
+
+      - name: Escaneo de seguridad (bandit)
+        run: bandit -r . -s B101 #ignorar los archivos test
 
       - name: ejecutar pruebas
         run: pytest
@@ -43,12 +46,26 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: construir y subir imagen
+      - name: construir 
         uses: docker/build-push-action@v4
         with:
           context: .
-          push: true
+          push: false
+          load: true
           tags: danieluque/mi-api:latest
+
+      - name: Escanear contenedor con trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: danieluque/mi-api:latest
+          format: 'table'
+          exit-code: '1' # si encuentra falla,rompe la ejecucion
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH' #son los que van a detener la ejecucion
+
+      -name: subir la imagen a docker hub
+        usues: docker push danieluque/mi-api:latest
 
       - name: deplegar en el sercidor cloud
         uses: appleboy/ssh-action@v1.0.3
